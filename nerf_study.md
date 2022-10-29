@@ -255,6 +255,8 @@ Viewformer
 
 2. Distortion loss的非grid使用
 
+3. 
+
  
 
  
@@ -357,7 +359,43 @@ Viewformer
 
 
 
- 
+**三、NEX类的位置与角度分离的隐式重建方法**（这个得是multiview）
+
+​	The motivation for using the second network is to ensure that the prediction of the basis functions is independent of the voxel coordinates. This allows to precompute and cache the output of `f(x, y, z)` for all coordinates. Therefore a novel view can be synthesized by just a single forward pass of network `g(v)`, because `f()` does not depend on `v` and we don't need to recompute it. 
+
+
+
+**四、kilo的small mlp加速方法**
+
+使用nerf蒸馏
+
+
+
+**五、加入直线loss限制**
+
+1. 根据 t 时刻计算的f_t+1得到transformer到 t+1 时刻的三维点在 t 时刻下的空间位置
+2. 将空间点的位置变换到 t+1 时刻下的位置
+3. 变换后的新位置，即在 t+1 时刻下的位置，理论上应该在同一条直线上，通过计算直线逼近loss优化 f 的计算精度
+
+**`NSFF的改进方向`**
+
+1. 训练与渲染速度 😭
+2. 不支持没看到的场景 😭
+3. 长时间动态渲染与**物体快速移动**会造成输出平滑与模糊等细节丢失现象 🤔
+4. **视角快速移动**也会产生artifacts（物体快速移动 & 视角快速移动 不一样）
+
+
+
+
+
+### To Check
+
+1. 提高t时刻不同视角下的深度估计准确度
+2. Blur nerf是否有可借鉴的思路，快速移动的物体重建模糊的原因之一可能是光流方法中光流范围的限制，另一个原因可能是快速移动造成采样帧内容本身的模糊
+
+
+
+
 
 ## 工具
 
@@ -368,7 +406,7 @@ Viewformer
 
 ## 内容记录 
 
-###### 八叉树Otree 与 morton3D
+### 八叉树Otree 与 morton3D
 
 https://qa.1r1g.com/sf/ask/69012541/
 
