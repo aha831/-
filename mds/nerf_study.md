@@ -415,3 +415,37 @@ https://zhuanlan.zhihu.com/p/195730581
 https://blog.csdn.net/qq_28660035/article/details/80488517
 
 https://www.forceflow.be/2013/10/07/morton-encodingdecoding-through-bit-interleaving-implementations/#:~:text=If%20you%20want%20to%20convert,cell%20along%20the%20Z%2Dcurve
+
+
+BN, LN, IN, GN：(N, C, H, W)
+
+1. bn是针对每一个C，都计算N✖️H✖️W的均值与方差
+
+2. Ln是针对每一个N，都计算C✖️H✖️W的均值与方差，相当于计算每张图片的全通道均值方差
+3. GN也针对每一个N，计算C✖️H✖️W的均值与方差，只不过这里的C分成了不同的组来计算(C1✖️H✖️W, C2✖️H✖️W, C=C1+C2)，相当于每次只计算计算每张图片的部分通道的均值方差
+4. Ln是针对每一个N,C，都计算H✖️W的均值与方差，相当于计算每张图片的单个通道的均值方差
+
+
+
+BN的参数：
+
+1. 因为BN是针对不同的C在N内做计算，所以参数量一定是C的倍数
+2. 其中可学习的参数有两个，weight/bias，二者的意义就是避免所有层的特征都被归一化为正态分布而失去特征差异性，因此通过这两个参数来恢复模型对不同层特征的敏感度
+3. mean/val则是在训练过程中随着迭代逐步使用动量法更新的，在测试前中通过net.eval()命令来固定
+
+
+
+softmax作用：
+
+1. 非负性
+2. 和为1
+3. 输入大于1的情况就被拉大倍数差距，小于1的情况会被缩小倍数差距(拉近)
+4. 多分类时不能用这个
+
+
+
+sigmoid：y=1/(1+exp(-x))
+
+
+
+二分类时不用mse而用交叉熵的原因：真实值是一种二值阶跃变化，无法很好的用mse拟合
