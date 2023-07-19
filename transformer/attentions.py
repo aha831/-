@@ -43,7 +43,6 @@ class MultiHeadAttention(nn.Module):
             q/k/v: [B, N_q/N_k/N_v, d_model]
         '''
         res = q
-        
         B, N_q, N_k, N_v = q.size(0), q.size(1), k.size(1), v.size(1)
         q = self.wqs(q).view(B, N_q, self.n_head, -1).transpose(1, 2)
         k = self.wks(k).view(B, N_k, self.n_head, -1).transpose(1, 2)
